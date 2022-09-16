@@ -23,3 +23,22 @@ function generateInput(amount, maximum)
     return generatedInput
 }
 
+/* SPLIT INPUT
+ * Splits a passed array into discrete, roughly equal chunks */
+function splitInput(arr, numChunks) 
+{
+    const chunks = [];
+    for (let i = 0; i < numChunks; i += 1) chunks[i] = [];
+    for (let i = 0; i < arr.length; i += 1) chunks[i % numChunks].push(arr[i])
+    return chunks
+}
+
+/* DISTRIBUTED WORK FUNCTION 
+ * This is the function that runs on many workers in parallel using dcp-client. Each function sorts one chunk */
+async function distributedWorkFunction(arr)
+{
+    progress();
+    return arr.sort(function(a, b) {
+        return a - b;
+    });
+}
