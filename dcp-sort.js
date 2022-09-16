@@ -76,27 +76,32 @@ function mergeChunks(arr)
 async function main() 
 {
     const compute = require('dcp/compute');
-    const CHUNKS = 10
-    const TOTAL = CHUNKS * 2500
+    const CHUNKS = 100
+    const TOTAL = CHUNKS * 250000
 
     // Create input
     let inputSet = splitInput(generateInput(TOTAL), CHUNKS);
 
     const job = compute.for(inputSet, distributedWorkFunction);
-    const startTime = Date.now()
+    const timeStart = Date.now()
     job.public.name = 'DCP-SORT'
-    //job.computeGroups = [{}]; comment out for security
+    //job.computeGroups = [{}]; //
 
     job.on('accepted', () => {
-        console.log(`Job accepted at ${Math.round((Date.now() - startTime) / 100) /10} with ${job.id}`)
+        timeAccepted = Date.now()
+        console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tJob Accepted, beginning distributed sorting. Id: ${job.id}`)
     })
 
     let resultSet = await job.exec();
     resultSet = Array.from(resultSet);
-    console.log(`Time: ${Math.round((Date.now() - startTime) / 100) /10}. Parallel sorting of chunks complete`);
+    timeSorted = Date.now()
+    console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tParallel sorting of chunks complete, beginning merging`);
 
     resultSet = mergeChunks(resultSet);
-    console.log(`Time: ${Math.round((Date.now() - startTime) / 100) /10}. Merging chunks complete`);
+    timeMerged = Date.now()
+    console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tMerging chunks complete. Finished.`);
+
+    console.log(`FINISHED\nNumbers:\t${TOTAL}\tChunks:${CHUNKS}\nAcceptance:\t${(timeAccepted-timeStart)/1000}\nSorting:\t${(timeSorted-timeAccepted)/1000}\nMerging:\t${(timeMerged-timeSorted)/1000}`);
 }
 
 require('dcp-client')
