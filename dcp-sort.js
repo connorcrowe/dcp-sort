@@ -71,16 +71,27 @@ function mergeChunks(arr)
     return sorted;
 }
 
+/* VALIDATE ORDER 
+ * Runs through the resulting array and confirms sorted order */
+function validateOrder(arr) 
+{
+    for (let i = 1; i < arr.length; i += 1)
+    {
+        if (arr[i] < arr[i-1]) return false;
+    }
+    return true;
+}
+
 /* MAIN
  * Generate input (or provide one), split it, then use dcp-client to run the work function on the chunks. Finally, merge the chunks and test the output. */
 async function main() 
 {
     const compute = require('dcp/compute');
-    const CHUNKS = 100
-    const TOTAL = CHUNKS * 250000
+    const CHUNKS = 10
+    const TOTAL = CHUNKS * 25
 
     // Create input
-    let inputSet = splitInput(generateInput(TOTAL), CHUNKS);
+    let inputSet = splitInput(generateInput(TOTAL, 999), CHUNKS);
 
     const job = compute.for(inputSet, distributedWorkFunction);
     const timeStart = Date.now()
@@ -99,9 +110,11 @@ async function main()
 
     resultSet = mergeChunks(resultSet);
     timeMerged = Date.now()
-    console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tMerging chunks complete. Finished.`);
+    console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tMerging chunks complete. Validating sort.`);
 
-    console.log(`FINISHED\nNumbers:\t${TOTAL}\tChunks:${CHUNKS}\nAcceptance:\t${(timeAccepted-timeStart)/1000}\nSorting:\t${(timeSorted-timeAccepted)/1000}\nMerging:\t${(timeMerged-timeSorted)/1000}`);
+    if (validateOrder(resultSet)){ console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tSort order validated. All done!`)
+    } else console.error('ERROR: Numbers not properly sorted! Something is wrong.')
+    console.log(`~~~/nFINISHED\nNumbers:\t${TOTAL}\tChunks:${CHUNKS}\nAcceptance:\t${(timeAccepted-timeStart)/1000}\nSorting:\t${(timeSorted-timeAccepted)/1000}\nMerging:\t${(timeMerged-timeSorted)/1000}`);
 }
 
 require('dcp-client')
