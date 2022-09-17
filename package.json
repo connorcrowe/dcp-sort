@@ -1,0 +1,22 @@
+{
+  "name": "dcp-sort",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dcp-sort.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/connorcrowe/dcp-sort.git"
+  },
+  "author": "Connor Crowe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/connorcrowe/dcp-sort/issues"
+  },
+  "homepage": "https://github.com/connorcrowe/dcp-sort#readme",
+  "dependencies": {
+    "dcp-client": "^4.2.12-a"
+  }
+}
