@@ -1,4 +1,4 @@
-/*
+/**
  * DCP-SORT
  * @file    dcp-sort.js
  * 
@@ -9,7 +9,7 @@
  *          be included in the README
  * 
  * @author  Connor Crowe, connorthecrowe@gmail.com
- * @date    December 2021 - September 2022 (on and off)
+ * @date    September 2022
 */
 
 /* GENERATE INPUT 
@@ -87,11 +87,10 @@ function validateOrder(arr)
 async function main() 
 {
     const compute = require('dcp/compute');
-    const CHUNKS = 10
-    const TOTAL = CHUNKS * 25
+    const config = require('./config').init();
 
     // Create input
-    let inputSet = splitInput(generateInput(TOTAL, 999), CHUNKS);
+    let inputSet = splitInput(generateInput(config.chunks*config.perChunk, config.maxIntGenerated), config.chunks);
 
     const job = compute.for(inputSet, distributedWorkFunction);
     const timeStart = Date.now()
@@ -110,11 +109,16 @@ async function main()
 
     resultSet = mergeChunks(resultSet);
     timeMerged = Date.now()
-    console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tMerging chunks complete. Validating sort.`);
+    console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tMerging chunks complete. ${config.validateResults ? 'Validating...' : 'Skipping validation (config)'}`);
 
-    if (validateOrder(resultSet)){ console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tSort order validated. All done!`)
-    } else console.error('ERROR: Numbers not properly sorted! Something is wrong.')
-    console.log(`~~~/nFINISHED\nNumbers:\t${TOTAL}\tChunks:${CHUNKS}\nAcceptance:\t${(timeAccepted-timeStart)/1000}\nSorting:\t${(timeSorted-timeAccepted)/1000}\nMerging:\t${(timeMerged-timeSorted)/1000}`);
+    if (config.validatedResults)
+    {
+        if (validateOrder(resultSet)){
+            console.log(`${Math.round((Date.now() - timeStart) / 100) /10}s\tSort order validated. All done!`)
+        } else console.error('ERROR: Numbers not properly sorted! Something is wrong.')
+    }
+    
+    console.log(`~~~\nFINISHED\nNumbers:\t${config.chunks*config.perChunk}\tChunks:${config.chunks}\nAcceptance:\t${(timeAccepted-timeStart)/1000}\nSorting:\t${(timeSorted-timeAccepted)/1000}\nMerging:\t${(timeMerged-timeSorted)/1000}`);
 }
 
 require('dcp-client')
