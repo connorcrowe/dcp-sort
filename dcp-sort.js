@@ -95,7 +95,7 @@ async function main()
     const job = compute.for(inputSet, distributedWorkFunction);
     const timeStart = Date.now()
     job.public.name = 'DCP-SORT'
-    //job.computeGroups = [{}]; //
+    job.computeGroups = [{joinKey:'OoopsILeftMy', joinSecret:'ComputeGroupCredsHere'}]; //
 
     job.on('accepted', () => {
         timeAccepted = Date.now()
