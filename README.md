@@ -27,10 +27,10 @@ There is then complexity in three steps:
 3. The non-parallel merging of chunks
 
 Here are some terms to be used:
-`n` = the total number of items to be sorted from the input data
-`c` = the number of chunks that the input is split into
-`m` = `n` / `c` or `input` / `chunks`, the number of items to be sorted in a given chunk
-`w` = the number of parallel DCP Workers able to sort a chunk when the job is initiated
+- `n` = the total number of items to be sorted from the input data
+- `c` = the number of chunks that the input is split into
+- `m` = `n` / `c` or `input` / `chunks`, the number of items to be sorted in a given chunk
+- `w` = the number of parallel DCP Workers able to sort a chunk when the job is initiated
 
 ### Time Complexity
 #### Splitting input into chunks
