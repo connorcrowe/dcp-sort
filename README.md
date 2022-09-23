@@ -33,14 +33,14 @@ Here are some terms to be used:
 - `w` = the number of parallel DCP Workers able to sort a chunk when the job is initiated
 
 ### Time Complexity
-#### Splitting input into chunks
+#### 1. Splitting input into chunks
 Each element in the input only needs to be operated on once to assign it to a chunk.
 ```
 O(c) + O(n)
 = O(n)
 ```
 
-#### Parallel sorting into chunks
+#### 2. Parallel sorting into chunks
 This part is trickier since it is done in parallel across multiple DCP Workers. First, consider one worker - the complexity would be `O(nlogn)`. Then, consider a number of workers equal to the number of chunks. Each chunk would go to one worker, they would all run at the same time, and complete at roughly the same time. The complexity would be `O(mlogm)`. (Note: see definition of `m` above).
 
 However, if the number of workers can't be assumed, then it must factor in. Consider 4 chunks, and 2 workers. The first two chunks would complete in `O(mlogm)` time, then the next two would as well. This makes our time `2 * O(mlogm)`. More generally, the time is affected by the ratio of chunks to workers. This makes it `O((c/w) mlogm)`, but since `m=n/c`, it becomes: `O((c/w)(n/c)log(n/c))`.
@@ -50,7 +50,7 @@ Simplifying the above, we get:
 O(nlogm / w)
 ```
 
-#### Merging the Chunks
+#### 3. Merging the Chunks
 To merge the chunks we examine the top of each one and pop the lowest into the sorted output. In worst case, the lowest number is in the last chunk searched every time (`n` times). 
 ```
 O((search chunks) * n) 
