@@ -15,7 +15,29 @@ The algorithm is designed to leverage a large parallel system to potentially acc
 - (Optional) Validate output to ensure everything is sorted
 
 ## Usage
+### Installation
+Clone the repo and initialize npm.
+```npm i```
 
+#### Set up config
+Then set up your input in the `config.js` file. 
+- `chunks`: the number of chunks for data to be split into
+- 'perChunk': the number of numbers to randomly generate per chunk to be sorted
+- `maxIntGenerated`: the highest number for the random generator to generate
+- `validateResults`: whether to run a check of the output to ensure it is sorted, or not
+
+#### Use your own data
+Will be supported better soon. For now, replace the input generating line in the main function with a line importing or describing your data. 
+```js
+    // Create input
+    let inputSet = splitInput(generateInput(config.chunks*config.perChunk, config.maxIntGenerated), config.chunks);
+```
+
+#### Set up DCP
+You will need a DCP account to run the job. Sign up [here](https://secure.distributed.computer/users/sign_in)!
+
+#### Run it
+```node dcp-sort.js```
 
 ## Time and Space Complexity Analysis
 *Draft:*
@@ -68,3 +90,7 @@ In the typical case (many workers, `c ≈ w`), the merge term is longer than the
 > For `w = c = 5`, the two terms' complexities intersect at `n = 5 * E25`)
 
 **This makes total time complexity is `O(nlogm / w) + O(cn)`, with `O(cn)` representing the average case.**
+
+### Space Complexity
+The space used is simply the size of the input set. The input is split into chunks, and then reassembled, but no additional space should be necessary.
+```O(n)```
