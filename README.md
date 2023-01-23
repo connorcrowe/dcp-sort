@@ -22,7 +22,7 @@ Clone the repo and initialize npm.
 #### Set up config
 Then set up your input in the `config.js` file. 
 - `chunks`: the number of chunks for data to be split into
-- 'perChunk': the number of numbers to randomly generate per chunk to be sorted
+- `perChunk`: the number of numbers to randomly generate per chunk to be sorted
 - `maxIntGenerated`: the highest number for the random generator to generate
 - `validateResults`: whether to run a check of the output to ensure it is sorted, or not
 
