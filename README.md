@@ -63,7 +63,7 @@ O(c) + O(n)
 ```
 
 #### 2. Parallel sorting into chunks
-This part is trickier since it is done in parallel across multiple DCP Workers. First, consider one worker - the complexity would be `O(nlogn)`. Then, consider a number of workers equal to the number of chunks. Each chunk would go to one worker, they would all run at the same time, and complete at roughly the same time. The complexity would be `O(mlogm)`. (Note: see definition of `m` above).
+This part is trickier since it is done in parallel across multiple DCP Workers. First, consider one worker - the complexity would be `O(nlogn)` (the complexity of the standard sorting algorithm used on each chunk). Then, consider a number of workers equal to the number of chunks. Each chunk would go to one worker, they would all run at the same time, and complete at roughly the same time. The complexity would be `O(mlogm)`. (Note: see definition of `m` above).
 
 However, if the number of workers can't be assumed, then it must factor in. Consider 4 chunks, and 2 workers. The first two chunks would complete in `O(mlogm)` time, then the next two would as well. This makes our time `2 * O(mlogm)`. More generally, the time is affected by the ratio of chunks to workers. This makes it `O((c/w) mlogm)`, but since `m=n/c`, it becomes: `O((c/w)(n/c)log(n/c))`.
 
@@ -84,12 +84,12 @@ O((search chunks) * n)
 O(splitting) + O(sorting) + O(merging)  
 = O(n) + O(nlogm / w) + O(cn)
 ```
-So which is the worse term? Increasing the number of workers available (to a maximum of `w = c`) decreases the sort term. Increasing the number of chunks actually decreases the sort term slightly, but has a larger impact on increasing the merge term. 
+So which is the worst term? Increasing the number of workers available (to a maximum of `w = c`) decreases the sort term. Increasing the number of chunks actually decreases the sort term slightly, but has a larger impact on increasing the merge term. 
 
 In the typical case (many workers, `c ≈ w`), the merge term is longer than the sort term, except for ludicrously high numbers of items to be sorted in the input set.
 > For `w = c = 5`, the two terms' complexities intersect at `n = 5 * E25`)
 
-**This makes total time complexity is `O(nlogm / w) + O(cn)`, with `O(cn)` representing the average case.**
+**This makes time complexity `O(nlogm / w) + O(cn)`, with `O(cn)` representing the average case.**
 
 ### Space Complexity
 The space used is simply the size of the input set. The input is split into chunks, and then reassembled, but no additional space should be necessary.
